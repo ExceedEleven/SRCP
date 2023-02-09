@@ -11,12 +11,24 @@ router = APIRouter(prefix="/park",
 
 @router.get("/", status_code=200)
 def get_park():
-    pass
+    collection = db["car_park"]
+    data = list(collection.find({}, {"_id": False}))
+    return {"result": data}
 
 
 @router.get("/{park_id}", status_code=200)
 def get_park(park_id: int):
-    pass
+    if park_id not in range(0, 1):
+        raise HTTPException(status_code=404, detail="Park Id not in range (0-1)")
+
+    collection = db["car_park"]
+    data = list(collection.find({"park_id": park_id}, {"_id": False}))
+
+    if (len(data) == 0):
+        raise HTTPException(status_code=404, detail="Park not found")
+
+    result = data[0]
+    return {"result": result}
 
 
 @router.put("/update/{park_id}", status_code=200)
