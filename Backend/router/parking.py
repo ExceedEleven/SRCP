@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from typing import List, Optional, Union
-
+from math import ceil
 from config.database import db
 from fastapi import APIRouter, Body, HTTPException
 
@@ -12,7 +12,8 @@ FEE = 10
 
 
 def cost_calculate(start: datetime, cost):
-    return abs(datetime.now() - start)*FEE
+    hours = ceil(abs(datetime.now() - start).total_seconds() / 3600)
+    return hours * FEE
 
 
 @router.get("/", status_code=200)
@@ -20,7 +21,7 @@ def get_park():
     collection = db["car_park"]
     data = list(collection.find({}, {"_id": False}))
 
-    if (len(data) == 0):
+    if len(data) == 0:
         raise HTTPException(status_code=404, detail="Park not found")
 
     return {"result": data}
@@ -28,13 +29,13 @@ def get_park():
 
 @router.get("/{park_id}", status_code=200)
 def get_park(park_id: int):
-    if park_id not in range(0, 1):
-        raise HTTPException(status_code=404, detail="Park Id not in range (0-1)")
+    if park_id not in range(0, 2):
+        raise HTTPException(status_code=404, detail="Park Id not in range (0-2)")
 
     collection = db["car_park"]
     data = list(collection.find({"park_id": park_id}, {"_id": False}))
 
-    if (len(data) == 0):
+    if len(data) == 0:
         raise HTTPException(status_code=404, detail="Park not found")
 
     result = data[0]
