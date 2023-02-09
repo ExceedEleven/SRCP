@@ -44,3 +44,23 @@ def delete_reserved_park(park_id: int):
     pass
 
 
+@router.get("/user/}{user_id}", status_code=200)
+def get_user():
+    pass
+
+
+@router.put("/user/update/{user_id}", status_code=200)
+def update_user():
+    pass
+
+
+@router.post("/signin", status_code=200)
+def signin():
+    pass
+
+
+@router.post("/signup", status_code=200)
+def signup():
+    pass
+
+
