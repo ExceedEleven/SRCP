@@ -5,11 +5,10 @@ from config.database import db
 from fastapi import APIRouter, Body, HTTPException
 
 PLEDGE = 50
+FEE = 10
 
 router = APIRouter(prefix="/park",
                    tags=["park"])
-
-FEE = 10
 
 
 def cost_calculate(start: datetime, cost):
