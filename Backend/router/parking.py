@@ -1,23 +1,46 @@
 from datetime import datetime, timedelta
 from typing import List, Optional, Union
-
+from math import ceil
 from config.database import db
 from fastapi import APIRouter, Body, HTTPException
 
 PLEDGE = 50
+FEE = 10
 
 router = APIRouter(prefix="/park",
                    tags=["park"])
 
-# Frontend 
+
+def cost_calculate(start: datetime, cost):
+    hours = ceil(abs(datetime.now() - start).total_seconds() / 3600)
+    return hours * FEE
+
+
 @router.get("/", status_code=200)
 def get_park():
-    pass
+    collection = db["car_park"]
+    data = list(collection.find({}, {"_id": False}))
+
+    if len(data) == 0:
+        raise HTTPException(status_code=404, detail="Park not found")
+
+    return {"result": data}
 
 # Frontend
 @router.get("/{park_id}", status_code=200)
 def get_park(park_id: int):
-    pass
+    if park_id not in range(0, 2):
+        raise HTTPException(status_code=404, detail="Park Id not in range (0-2)")
+
+    collection = db["car_park"]
+    data = list(collection.find({"park_id": park_id}, {"_id": False}))
+
+    if len(data) == 0:
+        raise HTTPException(status_code=404, detail="Park not found")
+
+    result = data[0]
+    return {"result": result,
+            "fee": cost_calculate(result["start_time"], FEE)}
 
 # # Hardware 
 # @router.put("/update/{park_id}", status_code=200)
