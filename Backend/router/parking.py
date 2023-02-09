@@ -30,7 +30,7 @@ def get_park():
 @router.get("/{park_id}", status_code=200)
 def get_park(park_id: int):
     if park_id not in range(0, 2):
-        raise HTTPException(status_code=404, detail="Park Id not in range (0-2)")
+        raise HTTPException(status_code=404, detail="Park Id not in range 0-1")
 
     collection = db["car_park"]
     data = list(collection.find({"park_id": park_id}, {"_id": False}))
@@ -50,7 +50,7 @@ def get_park(park_id: int):
 # Hardware
 @router.get("/barrier/{park_id}/{state}", status_code=200)
 def get_barrier(park_id: int, state: str):
-    if park_id not in range(0,1):
+    if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
     
     if state not in ["empty", "reserved", "parked"]:
@@ -81,7 +81,7 @@ def get_barrier(park_id: int, state: str):
 # Frontend
 @router.put("/barrier/{park_id}", status_code=200)
 def update_barrier(park_id: int):
-    if park_id not in range(0,1):
+    if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
     
     park = list(db["parking"].find({"park_id": park_id}))
