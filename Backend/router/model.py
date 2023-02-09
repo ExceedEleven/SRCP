@@ -9,7 +9,7 @@ class User(BaseModel):
     password: str
     credits_card: str
     park_id: str
-    time_reserverd: datetime
+    time_reserved: datetime
     
     
 class CarPark(BaseModel):
