@@ -19,6 +19,8 @@ class CarPark(BaseModel):
     time_start: datetime
     time_close: datetime
     is_use_time_close: bool
+    user_id: str
+    time_reserved: datetime
     
 
 class Payment(BaseModel):
