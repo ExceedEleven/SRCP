@@ -8,11 +8,21 @@ from fastapi import APIRouter, Body, HTTPException
 router = APIRouter(prefix="/park",
                    tags=["park"])
 
+FEE = 10
+
+
+def cost_calculate(start: datetime, cost):
+    return abs(datetime.now() - start)*FEE
+
 
 @router.get("/", status_code=200)
 def get_park():
     collection = db["car_park"]
     data = list(collection.find({}, {"_id": False}))
+
+    if (len(data) == 0):
+        raise HTTPException(status_code=404, detail="Park not found")
+
     return {"result": data}
 
 
@@ -28,7 +38,8 @@ def get_park(park_id: int):
         raise HTTPException(status_code=404, detail="Park not found")
 
     result = data[0]
-    return {"result": result}
+    return {"result": result,
+            "fee": cost_calculate(result["start_time"], FEE)}
 
 
 @router.put("/update/{park_id}", status_code=200)
