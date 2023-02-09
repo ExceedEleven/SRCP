@@ -1,13 +1,15 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class User(BaseModel):
-    user_id: str
-    park_id: str
+    # user id from database
+    jwt: str
     username: str
     password: str
     credits_card: str
-    jwt: str
+    park_id: str
+    time_reserverd: datetime
     
     
 class CarPark(BaseModel):
@@ -15,16 +17,12 @@ class CarPark(BaseModel):
     state: str
     is_open: bool
     time_start: datetime
+    time_close: datetime
+    is_use_time_close: bool
     
 
 class Payment(BaseModel):
-    payment_id: str
+    # payment_id from database
     user_id: str
     fee: int
     time_payment: datetime
-    
-    
-class Reservation(BaseModel):
-    user_id: str
-    park_id: str
-    time_expire: datetime
