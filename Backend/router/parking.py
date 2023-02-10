@@ -41,16 +41,13 @@ def get_park():
     if len(data) == 0:
         raise HTTPException(status_code=404, detail="Park not found")
 
-    remain_time_reserved = []
-
     for park in data:
         if park["time_reserved"] is not None:
-            remain_time_reserved.append(convert_time(park["time_reserved"] - datetime.now()))
+            park["remain_time_reserved"] = park["time_reserved"] - datetime.now()
         else:
-            remain_time_reserved.append(None)
+            park["remain_time_reserved"] = None
 
-    return {"result": data,
-            "remain_time_reserved": remain_time_reserved}
+    return {"result": data}
 
 
 # Frontend QR or park detail
@@ -75,10 +72,11 @@ def get_park_id(park_id: int):
     if result["time_start"] is not None:
         parked_time = convert_time(datetime.now() - result["time_start"])
 
-    return {"result": result,
-            "fee": cost_calculate(result["time_start"]),
-            "remain_time_reserved": reserved_time,
-            "parked_time": parked_time}
+    result["remain_time_reserved"] = reserved_time
+    result["parked_time"] = parked_time
+    result["fee"] = cost_calculate(result["time_start"])
+
+    return {"result": result}
 
 
 # # Hardware
@@ -175,7 +173,7 @@ def reserved_park(park_id: int, user_id: int):
     collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user_id,
                                                                "state": "reserved",
                                                                "is_open": False,
-                                                                "time_reserved": datetime.now() + timedelta(minutes=30)}})
+                                                                "time_reserved": datetime.now() + timedelta(seconds=30)}})
                                                                 
     collection_user.update_one({"_id": user_id}, {"$set": {"park_id": park_id}})
     
