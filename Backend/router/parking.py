@@ -59,8 +59,8 @@ def get_barrier(park_id: int, state: str):
     if state not in ["empty", "reserved", "parked"]:
         raise HTTPException(status_code=404, detail="state must in [empty, reserved, parked]")
 
-    park = list(db["car_park"].find({"park_id": park_id}))
     collection_park = db["car_park"]
+    park = list(collection_park.find({"park_id": park_id}))
 
     if len(park) == 0:
         raise HTTPException(status_code=404, detail="park not found")
@@ -100,8 +100,8 @@ def update_barrier(park_id: int):
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
 
-    park = list(db["parking"].find({"park_id": park_id}))
     collection_park = db["car_park"]
+    park = list(collection_park.find({"park_id": park_id}))
 
     if len(park) == 0:
         raise HTTPException(status_code=404, detail="park not found")
