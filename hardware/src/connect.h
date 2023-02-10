@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+
+// const char* ssid = "SCPR";
+// const char* password = "88888888";
 const char* ssid = "AZEUS 7671";
 const char* password = "9225iC:3";
-
-const String baseUrl = "";
+const String baseUrl = "http://group11.exceed19.online/";
 
 void get_data(DynamicJsonDocument &doc) {
 	const String url = baseUrl + "";
@@ -45,7 +47,7 @@ void connectWifi() {
 	WiFi.begin(ssid, password);
 	Serial.println("Connecting to WiFi");
 	while (WiFi.status() != WL_CONNECTED) {
-		delay(500);
+		vTaskDelay(500/portTICK_PERIOD_MS);
 		Serial.print(".");
 	}
 	Serial.print("Connected, IP = ");
