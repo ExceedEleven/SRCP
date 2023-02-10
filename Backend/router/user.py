@@ -23,7 +23,7 @@ router = APIRouter(prefix="/user",
 
 
 @router.get("/", status_code=200)
-def get_user(token: str = Body()):
+def get_user(token: str = Body(embed=True)):
     user = list(COLLECTION_USER.find({"jwt": token}))
     if len(user) == 0:
         raise HTTPException(status_code=404, detail="User not found")
