@@ -8,13 +8,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { SendRegister } from '../services/postdata';
 
-const SignupPopup = () => {
-  const [open, setOpen] = React.useState(false);
+const SignupPopup = ({state,popset}) => {
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
-    setOpen(false);
+    popset(false);
   };
   const handleClosedata = () => {
     console.log(username.value);
@@ -30,7 +30,7 @@ const SignupPopup = () => {
       expire.value !== ''
     ) {
       // SendRegister(username.value,password.value,credit_num.value)
-      setOpen(false);
+      popset(false)
     } else {
       username.value = '';
       credit_num.value = '';
@@ -41,10 +41,7 @@ const SignupPopup = () => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Signup
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={state} onClose={handleClose}>
         <DialogTitle>Signup</DialogTitle>
         <DialogContent>
           <DialogContentText></DialogContentText>

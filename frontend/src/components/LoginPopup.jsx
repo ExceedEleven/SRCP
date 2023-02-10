@@ -8,13 +8,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { SendLogin } from '../services/postdata';
 
-const LoginPopup = () => {
-  const [open, setOpen] = React.useState(false);
+const LoginPopup = ({state,popset}) => {
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
-    setOpen(false);
+    popset(false);
   };
   const handleClosedata = () => {
     console.log(username.value);
@@ -29,10 +28,7 @@ const LoginPopup = () => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Login
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={state} onClose={handleClose}>
         <DialogTitle>Login</DialogTitle>
         <DialogContent>
           <DialogContentText></DialogContentText>
