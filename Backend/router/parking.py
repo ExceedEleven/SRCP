@@ -75,7 +75,10 @@ def get_barrier(park_id: int, state: str):
             collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
                                                                         "is_open": True,
                                                                         "time_start": None,
-                                                                        "is_use_time_close": True}})
+                                                                        "time_close": None,
+                                                                        "is_use_time_close": True,
+                                                                        "user_id": "-1",
+                                                                        "time_reserved": None}})
 
     if park[0]["state"] == "reserved" and park[0]["time_reserved"] < datetime.now():
         collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
@@ -105,7 +108,7 @@ def update_barrier(park_id: int):
     collection_park.update_one({"park_id": park_id}, {"$set": {"is_open": True,
                                                              "time_close": datetime.now() + timedelta(seconds=10),
                                                              "is_use_time_close": False}})
-    #Payment after open
+    # Payment after open
 
     return {"result": "Success, barrier is open"}
 
