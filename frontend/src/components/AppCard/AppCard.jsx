@@ -15,17 +15,7 @@ function Status_style(status) {
   }
 }
 
-function Available(
-  login,
-  all,
-  popEnter,
-  popExit,
-  popReserve,
-  setPopEnter,
-  setPopExit,
-  setPopReserve,
-  setParkId
-) {
+function Available(login, setPopReserve) {
   if (!login) {
     return <h1>Available</h1>;
   } else {
@@ -35,7 +25,7 @@ function Available(
         <AppButton
           btnText="Reserved"
           onClick={() => {
-            (park_id = all), setPopReserve(true);
+            setPopReserve(true);
           }}
         />
       </div>
@@ -43,17 +33,7 @@ function Available(
   }
 }
 
-function Reserved(
-  login,
-  all,
-  popEnter,
-  popExit,
-  popReserve,
-  setPopEnter,
-  setPopExit,
-  setPopReserve,
-  setParkId
-) {
+function Reserved(login, all, setPopEnter, setPopExit) {
   if (!login) {
     return <h1>Reserved</h1>;
   } else {
@@ -100,12 +80,12 @@ function Status({
 }) {
   console.log(all);
   if (all.state == 'empty') {
-    return Available(login, all);
+    return Available(login, setPopReserve);
   } else {
     if (all.state != 'reserved') {
       return <h1>Unavailble</h1>;
     } else {
-      Reserved(login, all);
+      Reserved(login, all, setPopEnter, setPopExit);
     }
   }
 }

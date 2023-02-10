@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import AppCard from '../components/AppCard/AppCard';
 import { getData } from '../services/fetchdata';
-const GridCard = (
+import Button from '@mui/material/Button';
+const GridCard = ({
   login,
   popEnter,
   popExit,
@@ -10,7 +11,7 @@ const GridCard = (
   setPopExit,
   setPopReserve,
   setParkId
-) => {
+}) => {
   const [parks, setParks] = useState([]);
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -26,6 +27,12 @@ const GridCard = (
 
   return (
     <div>
+      {/* <Button
+        onClick={() => {
+          setPopReserve(true);
+        }}>
+        asdsd
+      </Button> */}
       {parks.map((park) => (
         <AppCard
           park={park}
