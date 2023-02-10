@@ -28,7 +28,7 @@ def get_park():
 
 # Frontend
 @router.get("/{park_id}", status_code=200)
-def get_park(park_id: int):
+def get_park_id(park_id: int):
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="Park Id not in range 0-1")
 
