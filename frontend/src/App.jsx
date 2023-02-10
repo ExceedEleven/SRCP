@@ -3,6 +3,7 @@ import './App.css';
 import AppButton from './components/AppButton/AppButton';
 import LoginPopup from './components/LoginPopup';
 import SignupPopup from './components/SignupPopup';
+import GridCard from './containers/GridCard';
 import HeadBar from './containers/HeadBar';
 import PopupConfirm from './containers/PopupConfirm';
 
@@ -25,6 +26,7 @@ function App() {
         popReserve={popReserve}
         setPopReserve={setPopReserve}
       />
+      <GridCard login={isLogin} />
       <SignupPopup />
       <LoginPopup />
       <AppButton /> {/** Test reserve button */}

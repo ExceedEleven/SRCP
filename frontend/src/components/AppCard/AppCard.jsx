@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { getDatabyid } from '../../services/fetchdata';
+import React from 'react';
 
 function Status_style(status) {
   console.log(status);
@@ -19,6 +18,7 @@ function Available(login) {
   if (!login) {
     <h1>Available</h1>;
   } else {
+    <h1>Test</h1>;
   }
 }
 
@@ -33,29 +33,20 @@ function Status({ status, login }) {
     } else {
       if (!login) {
         return <h1>Reserved</h1>;
-      } else if (user) {
+      } else if (true) {
+        return <h1>Test</h1>;
       }
     }
   }
 }
 
-export const AppCard = ({ park_id, login }) => {
-  const [state, setState] = useState('empty');
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      getDatabyid(park_id).then((data) => {
-        setState(() => data.result.state);
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
+export const AppCard = ({ park, login }) => {
   return (
     <div>
-      <h2>Parking {park_id + 1}</h2>
-      <Card sx={{ height: 400, width: 500 }} style={{ backgroundColor: Status_style(state) }}>
+      <h2>Parking {park.park_id + 1}</h2>
+      <Card sx={{ height: 400, width: 500 }} style={{ backgroundColor: Status_style(park.state) }}>
         <CardContent>
-          <Status status={state} login={false} />
+          <Status status={park.state} login={login} />
         </CardContent>
       </Card>
     </div>
