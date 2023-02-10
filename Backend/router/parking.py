@@ -162,7 +162,7 @@ def update_barrier(park_id: int):
 
 
 # Frontend 
-# gonna be token
+# gonna be token #_id can't use
 @router.post("/reserved/{park_id}", status_code=200)
 def reserved_park(park_id: int, token: str = Body(embed=True)):
     if park_id not in range(0, 2):
@@ -181,7 +181,7 @@ def reserved_park(park_id: int, token: str = Body(embed=True)):
     if park[0]["state"] != "empty":
         raise HTTPException(status_code=404, detail="park is not empty")
 
-    collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user["_id"],
+    collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user[0]["_id"],
                                                                "state": "reserved",
                                                                "is_open": False,
                                                                "time_reserved": datetime.now() + timedelta(seconds=5)}})
@@ -213,7 +213,7 @@ def delete_reserved_park(park_id: int, token: str = Body()):
     if len(user_token) == 0:
         raise HTTPException(status_code=404, detail="user not found")
 
-    if park[0]["user_id"] != user_token["_id"]:
+    if park[0]["user_id"] != user_token[0]["_id"]:
         raise HTTPException(status_code=404, detail="Error user permission")
 
     create_payment(park[0]["user_id"], PLEDGE // 2)
