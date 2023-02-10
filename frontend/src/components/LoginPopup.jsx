@@ -20,7 +20,7 @@ const LoginPopup = () => {
     console.log(username.value);
     console.log(password.value);
     if (username.value !== '' && password.value !== '') {
-        // SendLogin(username.value,password.value)
+      // SendLogin(username.value,password.value)
       setOpen(false);
     } else {
       username.value = '';

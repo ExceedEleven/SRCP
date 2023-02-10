@@ -29,7 +29,7 @@ const SignupPopup = () => {
       cvv.value !== '' &&
       expire.value !== ''
     ) {
-        // SendRegister(username.value,password.value,credit_num.value)
+      // SendRegister(username.value,password.value,credit_num.value)
       setOpen(false);
     } else {
       username.value = '';
