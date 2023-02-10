@@ -26,7 +26,16 @@ function App() {
         popReserve={popReserve}
         setPopReserve={setPopReserve}
       />
-      <GridCard login={isLogin} />
+      <GridCard
+        login={isLogin}
+        popEnter={popEnter}
+        setPopEnter={setPopEnter}
+        popExit={popExit}
+        setPopExit={setPopExit}
+        popReserve={popReserve}
+        setPopReserve={setPopReserve}
+        setParkId={setParkId}
+      />
       <SignupPopup />
       <LoginPopup />
       <AppButton /> {/** Test reserve button */}

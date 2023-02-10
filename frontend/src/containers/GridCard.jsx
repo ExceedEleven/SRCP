@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import AppCard from '../components/AppCard/AppCard';
 import { getData } from '../services/fetchdata';
-const GridCard = (login) => {
+const GridCard = (
+  login,
+  popEnter,
+  popExit,
+  popReserve,
+  setPopEnter,
+  setPopExit,
+  setPopReserve,
+  setParkId
+) => {
   const [parks, setParks] = useState([]);
-
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -19,7 +27,17 @@ const GridCard = (login) => {
   return (
     <div>
       {parks.map((park) => (
-        <AppCard park={park} login={login} />
+        <AppCard
+          park={park}
+          login={login}
+          popEnter={popEnter}
+          setPopEnter={setPopEnter}
+          popExit={popExit}
+          setPopExit={setPopExit}
+          popReserve={popReserve}
+          setPopReserve={setPopReserve}
+          setParkId={setParkId}
+        />
       ))}
     </div>
   );
