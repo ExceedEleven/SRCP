@@ -1,27 +1,76 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Body, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from config.database import db
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+import os
+from dotenv import load_dotenv
+
+load_dotenv(".env")
+
+SECRET_KEY=os.getenv("SECRET_KEY")
+ALGORITHM=os.getenv("ALGORITHM")
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+COLLECTION_USER = db["user_parking"]
 
 router = APIRouter(prefix="/user",
                    tags=["user"])
 
 
-@router.get("/{user_id}", status_code=200)
-def get_user():
-    pass
+@router.get("/", status_code=200)
+def get_user(token: str = Body()):
+    user = list(COLLECTION_USER.find({"jwt": token}))
+    if len(user) == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"result": {
+        "park_id": user[0]["park_id"],
+    }}
 
-# optional
-@router.put("/update/{user_id}", status_code=200)
-def update_user():
-    pass
-
-# username
-# password
+# # optional # split password and credit card
+# @router.put("/update", status_code=200)
+# def update_user(token: str = Body(), credit_card: str = Body()):
+#     return
+#     user = list(COLLECTION_USER.find({"jwt": token}))
+#     if len(user) == 0:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     pass
+#
+    
 @router.post("/signin", status_code=200)
-def signin():
-    pass
+def signin(username: str = Body(), password: str = Body()):
+    user = list(COLLECTION_USER.find({"username": username}))
+    if len(user) == 0 or not pwd_context.verify(password, user[0]["password"]):
+        raise HTTPException(status_code=404, detail="Username or password is incorrect")
+    
+    return {"result": {
+        "jwt": user[0]["jwt"],
+    }}
 
-# username 
-# password
-# credit card
+
 @router.post("/signup", status_code=200)
-def signup():
-    pass
+def signup(username: str = Body(), password: str = Body(), credit_card: str = Body()):
+    if username == password:
+        raise HTTPException(status_code=404, detail="Username and password must be different")
+    
+    other_user = list(COLLECTION_USER.find({"username": username}))
+    if len(other_user) != 0:
+        raise HTTPException(status_code=404, detail="Username already exists")
+    
+    password_hash = pwd_context.hash(password)
+    
+    token = jwt.encode({"username": username}, SECRET_KEY, algorithm=ALGORITHM)
+    
+    COLLECTION_USER.insert_one({"jwt": token,
+                                "username": username,
+                                "password": password_hash,
+                                "credit_card": credit_card,
+                                "park_id": "-1"})
+    
+    return {"result": {
+        "jwt": token,
+        }}
