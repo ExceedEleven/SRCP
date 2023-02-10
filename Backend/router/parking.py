@@ -164,7 +164,7 @@ def update_barrier(park_id: int):
 # Frontend 
 # gonna be token
 @router.post("/reserved/{park_id}", status_code=200)
-def reserved_park(park_id: int, token: str = Body()):
+def reserved_park(park_id: int, token: str = Body(embed=True)):
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
 
