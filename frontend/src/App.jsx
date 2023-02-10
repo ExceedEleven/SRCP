@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import './App.css';
 import HeadBar from './containers/HeadBar';
 import PopupConfirm from './containers/PopupConfirm';
+import FormDialog from './components/SignupPopup';
+import SignupPopup from './components/SignupPopup';
+import LoginPopup from './components/LoginPopup';
 
 function App() {
   const [popEnter, setPopEnter] = useState(false);
@@ -20,8 +23,9 @@ function App() {
         popExit={popExit}
         setPopExit={setPopExit}
       />
+          
+      <SignupPopup />
+      <LoginPopup />
     </main>
-  );
-}
 
 export default App;
