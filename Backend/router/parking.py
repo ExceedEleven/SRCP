@@ -145,7 +145,8 @@ def update_barrier(park_id: int):
                                                                "time_close": datetime.now() + timedelta(seconds=10),
                                                                "is_use_time_close": False}})
     # Payment after open
-    create_payment(park[0]["user_id"], cost_calculate(park[0]["time_start"]))
+    if park[0]["state"] == "parked":
+        create_payment(park[0]["user_id"], cost_calculate(park[0]["time_start"]))
     
     return {"result": "Success, barrier is open"}
 
