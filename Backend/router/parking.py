@@ -11,11 +11,18 @@ router = APIRouter(prefix="/park",
                    tags=["park"])
 
 
-def cost_calculate(start: datetime):
+def cost_calculate(start):
     if start is None:
         return 0
     hours = ceil(abs(datetime.now() - start).total_seconds() / 3600)
     return hours * FEE
+
+
+def convert_time(time: datetime):
+    hour = int(time.total_seconds() // 3600)
+    min = int(time.total_seconds() % 3600 // 60)
+    sec = int(time.total_seconds() % 60 // 1)
+    return f"{hour}:{min}:{sec}"
 
 
 def create_payment(user_id: str, fee: int):
@@ -23,6 +30,7 @@ def create_payment(user_id: str, fee: int):
     collection_payment.insert_one({"user_id": user_id,
                            "fee": fee,
                            "time_payment": datetime.now()})
+
 
 # Frontend
 @router.get("/", status_code=200)
@@ -33,7 +41,16 @@ def get_park():
     if len(data) == 0:
         raise HTTPException(status_code=404, detail="Park not found")
 
-    return {"result": data}
+    remain_time_reserved = []
+
+    for park in data:
+        if park["time_reserved"] is not None:
+            remain_time_reserved.append(convert_time(park["time_reserved"] - datetime.now()))
+        else:
+            remain_time_reserved.append(None)
+
+    return {"result": data,
+            "remain_time_reserved": remain_time_reserved}
 
 
 # Frontend QR or park detail
@@ -49,8 +66,19 @@ def get_park_id(park_id: int):
         raise HTTPException(status_code=404, detail="Park not found")
 
     result = data[0]
+
+    reserved_time = None
+    if result["time_reserved"] is not None:
+        reserved_time = convert_time(result["time_reserved"] - datetime.now())
+
+    parked_time = None
+    if result["time_start"] is not None:
+        parked_time = convert_time(datetime.now() - result["time_start"])
+
     return {"result": result,
-            "fee": cost_calculate(result["time_start"])}
+            "fee": cost_calculate(result["time_start"]),
+            "remain_time_reserved": reserved_time,
+            "parked_time": parked_time}
 
 
 # # Hardware
