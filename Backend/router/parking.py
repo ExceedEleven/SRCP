@@ -3,10 +3,15 @@ from typing import List, Optional, Union
 from math import ceil
 from config.database import db
 from fastapi import APIRouter, Body, HTTPException
+import os
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 PLEDGE = 50
 FEE = 10
-BASEUSERID = "63e5ec59d694acc1cd97b67e"
+BASEUSERID = os.getenv("BASEUSERID")
+
 
 router = APIRouter(prefix="/park",
                    tags=["park"])
