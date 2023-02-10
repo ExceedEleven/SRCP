@@ -6,22 +6,17 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 
-void ShowLcd(DynamicJsonDocument &doc)
+void ShowLcd(String isPark[2])
 {
     
     int count = 0;
 
     for(int i =0; i< 2;i++){
-        Serial.print("in loop ");
-        Serial.println(i);
-        String isPark = doc["result"][i]["state"].as<String>();
-        Serial.println(isPark);
-        if (isPark == "empty"){
+        if (isPark[i] == "empty"){
             count++;
         }
         
     }
-    
     lcd.init();
     lcd.backlight();
     lcd.print("Park remain ");
