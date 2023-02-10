@@ -15,8 +15,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-
-
 COLLECTION_USER = db["user_parking"]
 
 router = APIRouter(prefix="/user",
@@ -43,8 +41,6 @@ def update_user(token: str = Body(), credit_card: str = Body()):
     pass
     
     
-    
-
 @router.post("/signin", status_code=200)
 def signin(username: str = Body(), password: str = Body()):
     user = list(COLLECTION_USER.find({"username": username}))
