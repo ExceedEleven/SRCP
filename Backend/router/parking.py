@@ -19,7 +19,7 @@ def cost_calculate(start: datetime):
 
 
 def create_payment(user_id: str, fee: int):
-    collection_payment = db["payment"]
+    collection_payment = db["payment_parking"]
     collection_payment.insert_one({"user_id": user_id,
                            "fee": fee,
                            "time_payment": datetime.now()})
