@@ -6,6 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { SendLogin } from '../services/postdata';
 
 const LoginPopup = () => {
   const [open, setOpen] = React.useState(false);
@@ -19,6 +20,7 @@ const LoginPopup = () => {
     console.log(username.value);
     console.log(password.value);
     if (username.value !== '' && password.value !== '') {
+        // SendLogin(username.value,password.value)
       setOpen(false);
     } else {
       username.value = '';

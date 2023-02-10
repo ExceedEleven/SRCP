@@ -6,6 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { SendRegister } from '../services/postdata';
 
 const SignupPopup = () => {
   const [open, setOpen] = React.useState(false);
@@ -28,6 +29,7 @@ const SignupPopup = () => {
       cvv.value !== '' &&
       expire.value !== ''
     ) {
+        // SendRegister(username.value,password.value,credit_num.value)
       setOpen(false);
     } else {
       username.value = '';
