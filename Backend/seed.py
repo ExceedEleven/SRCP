@@ -10,7 +10,7 @@ SEED_DATA = [
         "time_start": None,
         "time_close": None,
         "is_use_time_close": True,
-        "user_id": None,
+        "user_id": "-1",
         "time_reserved": None
 
 
@@ -22,7 +22,7 @@ SEED_DATA = [
         "time_start": None,
         "time_close": None,
         "is_use_time_close": True,
-        "user_id": None,
+        "user_id": "-1",
         "time_reserved": None
     }
 ]
