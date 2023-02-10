@@ -5,13 +5,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
-import { SetBarrier } from '../../services/postdata';
 
-const DialogConfirm = ({ park_id, message, open, setOpen }) => {
-  const handleOpenGate = () => {
-    SetBarrier(park_id);
-  };
-
+const DialogConfirm = ({ parkId, handleFunc, message, open, setOpen }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -35,7 +30,7 @@ const DialogConfirm = ({ park_id, message, open, setOpen }) => {
         <Button
           onClick={() => {
             handleClose();
-            handleOpenGate();
+            handleFunc();
           }}
           autoFocus>
           Agree
