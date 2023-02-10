@@ -1,19 +1,29 @@
 from router.model import *
 from config.database import db
 
-COLLECTION = db["parking"]
+COLLECTION = db["car_park"]
 SEED_DATA = [
     {
         "park_id": 0,
         "state": "empty",
         "is_open": True,
-        "time_start": None
+        "time_start": None,
+        "time_close": None,
+        "is_use_time_close": True,
+        "user_id": "-1",
+        "time_reserved": None
+
+
     },
     {
         "park_id": 1,
         "state": "empty",
         "is_open": True,
-        "time_start": None
+        "time_start": None,
+        "time_close": None,
+        "is_use_time_close": True,
+        "user_id": "-1",
+        "time_reserved": None
     }
 ]
 
