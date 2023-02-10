@@ -1,28 +1,31 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
+import React, { useState } from 'react';
 import './App.css';
+import HeadBar from './containers/HeadBar';
+import PopupConfirm from './containers/PopupConfirm';
 import FormDialog from './components/SignupPopup';
 import SignupPopup from './components/SignupPopup';
 import LoginPopup from './components/LoginPopup';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [popEnter, setPopEnter] = useState(false);
+  const [popExit, setPopExit] = useState(false);
+  const [isLogin, setLogin] = useState(false);
+  const [id, setId] = useState(-1);
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <SignupPopup></SignupPopup>
+    <main>
+      <HeadBar isLogin={isLogin} setLogin={setLogin} />
+
+      <PopupConfirm
+        id={id}
+        popEnter={popEnter}
+        setPopEnter={setPopEnter}
+        popExit={popExit}
+        setPopExit={setPopExit}
+      />
+          
+      <SignupPopup />
       <LoginPopup />
-    </div>
-  );
-}
+    </main>
 
 export default App;
