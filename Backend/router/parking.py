@@ -106,7 +106,7 @@ def get_barrier(park_id: int, state: str):
 
     if park[0]["state"] in ["empty", "reserved"] and state == "parked":
         collection_park.update_one({"park_id": park_id}, {"$set": {"state": "parked",
-                                                                   "time_close": datetime.now() + timedelta(seconds=TIME_CLOSE).total_seconds(),
+                                                                   "time_close": datetime.now() + timedelta(seconds=TIME_CLOSE),
                                                                    "is_use_time_close": False}})
 
     # =====
