@@ -11,7 +11,7 @@ router = APIRouter(prefix="/park",
                    tags=["park"])
 
 
-def cost_calculate(start: datetime, cost):
+def cost_calculate(start: datetime):
     hours = ceil(abs(datetime.now() - start).total_seconds() / 3600)
     return hours * FEE
 
@@ -41,7 +41,7 @@ def get_park_id(park_id: int):
 
     result = data[0]
     return {"result": result,
-            "fee": cost_calculate(result["start_time"], FEE)}
+            "fee": cost_calculate(result["time_start"])}
 
 
 # # Hardware
@@ -82,7 +82,7 @@ def get_barrier(park_id: int, state: str):
                                                                  "is_open": True,
                                                                  "time_start": None,
                                                                  "is_use_time_close": True,
-                                                                 "user_id": None,
+                                                                 "user_id": "-1",
                                                                  "time_reserved": None}})
         # add payment for user who reserved this park but not park 50
     # =====
