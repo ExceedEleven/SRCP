@@ -15,7 +15,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-COLLECTION_USER = db["user_parking"]
+COLLECTION_USER = db["parking_user"]
 
 router = APIRouter(prefix="/user",
                    tags=["user"])
