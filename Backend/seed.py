@@ -1,7 +1,7 @@
 from router.model import *
 from config.database import db
 
-COLLECTION = db["parking"]
+COLLECTION = db["car_park"]
 SEED_DATA = [
     {
         "park_id": 0,
