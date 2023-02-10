@@ -17,6 +17,7 @@ def cost_calculate(start: datetime, cost):
     hours = ceil(abs(datetime.now() - start).total_seconds() / 3600)
     return hours * FEE
 
+
 # Frontend
 @router.get("/", status_code=200)
 def get_park():
@@ -43,7 +44,7 @@ def get_park_id(park_id: int):
 
     result = data[0]
     return {"result": result,
-            "fee": cost_calculate(result["start_time"], FEE)}
+            "fee": cost_calculate(result["time_start"])}
 
 
 # # Hardware
@@ -60,8 +61,8 @@ def get_barrier(park_id: int, state: str):
     if state not in ["empty", "reserved", "parked"]:
         raise HTTPException(status_code=404, detail="state must in [empty, reserved, parked]")
 
-    park = list(db["car_park"].find({"park_id": park_id}))
     collection_park = db["car_park"]
+    park = list(collection_park.find({"park_id": park_id}))
 
     if len(park) == 0:
         raise HTTPException(status_code=404, detail="park not found")
@@ -70,22 +71,25 @@ def get_barrier(park_id: int, state: str):
     if park[0]["is_use_time_close"] == False and park[0]["time_close"] < datetime.now():
         if state == "parked":
             collection_park.update_one({"park_id": park_id}, {"$set": {"is_open": False,
-                                                                        "time_start": datetime.now(),
-                                                                        "is_use_time_close": True}})
+                                                                       "time_start": datetime.now(),
+                                                                       "is_use_time_close": True}})
 
         elif state == "empty":
             collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
-                                                                        "is_open": True,
-                                                                        "time_start": None,
-                                                                        "is_use_time_close": True}})
+                                                                       "is_open": True,
+                                                                       "time_start": None,
+                                                                       "time_close": None,
+                                                                       "is_use_time_close": True,
+                                                                       "user_id": "-1",
+                                                                       "time_reserved": None}})
 
     if park[0]["state"] == "reserved" and park[0]["time_reserved"] < datetime.now():
         collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
-                                                                 "is_open": True,
-                                                                 "time_start": None,
-                                                                 "is_use_time_close": True,
-                                                                 "user_id": None,
-                                                                 "time_reserved": None}})
+                                                                   "is_open": True,
+                                                                   "time_start": None,
+                                                                   "is_use_time_close": True,
+                                                                   "user_id": "-1",
+                                                                   "time_reserved": None}})
         # add payment for user who reserved this park but not park 50
     # =====
 
@@ -98,16 +102,16 @@ def update_barrier(park_id: int):
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
 
-    park = list(db["parking"].find({"park_id": park_id}))
     collection_park = db["car_park"]
+    park = list(collection_park.find({"park_id": park_id}))
 
     if len(park) == 0:
         raise HTTPException(status_code=404, detail="park not found")
 
     collection_park.update_one({"park_id": park_id}, {"$set": {"is_open": True,
-                                                             "time_close": datetime.now() + timedelta(seconds=10),
-                                                             "is_use_time_close": False}})
-    #Payment after open
+                                                               "time_close": datetime.now() + timedelta(seconds=10),
+                                                               "is_use_time_close": False}})
+    # Payment after open
 
     return {"result": "Success, barrier is open"}
 
