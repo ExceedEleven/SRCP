@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import FormDialog from './components/SignupPopup'
+import SignupPopup from './components/SignupPopup'
+import LoginPopup from './components/LoginPopup'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,6 +24,7 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
+        
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
@@ -27,6 +32,8 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <SignupPopup></SignupPopup>
+      <LoginPopup/>
     </div>
   )
 }
