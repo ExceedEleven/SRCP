@@ -128,10 +128,33 @@ def update_barrier(park_id: int):
 # Frontend
 @router.post("/reserved/{park_id}/{user_id}", status_code=200)
 def reserved_park(park_id: int, user_id: int):
-    pass
+    if park_id not in range(0, 2):
+        raise HTTPException(status_code=404, detail="park_id must in range 0-1")
+    
+    collection_park = db["car_park"]
+    park = list(collection_park.find({"park_id": park_id}))
+    if len(park) == 0:
+        raise HTTPException(status_code=404, detail="park not found")
+    
+    collection_user = db["parking_user"]
+    user = list(collection_user.find({"_id": user_id}))
+    if len(user) == 0:
+        raise HTTPException(status_code=404, detail="user not found")
+    
+    if park[0]["state"] != "empty":
+        raise HTTPException(status_code=404, detail="park is not empty")
+    
+    collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user_id,
+                                                               "state": "reserved",
+                                                               "is_open": False,
+                                                                "time_reserved": datetime.now() + timedelta(minutes=30)}})
+                                                                
+    collection_user.update_one({"_id": user_id}, {"$set": {"park_id": park_id}})
+    
+    return {"result": "Success, park is reserved"}
+    
 
-
-# Frontend
+# Frontend Optional
 @router.delete("/reserved/{park_id}", status_code=200)
 def delete_reserved_park(park_id: int):
     pass
