@@ -6,6 +6,7 @@ from fastapi import APIRouter, Body, HTTPException
 
 PLEDGE = 50
 FEE = 10
+BASEUSERID = "63e5ec59d694acc1cd97b67e"
 
 router = APIRouter(prefix="/park",
                    tags=["park"])
@@ -27,7 +28,10 @@ def convert_time(time: datetime):
 
 def create_payment(user_id: str, fee: int):
     collection_payment = db["payment_parking"]
-    collection_payment.insert_one({"user_id": user_id,
+    if user_id == "-1":
+        user_id = BASEUSERID
+    else:
+        collection_payment.insert_one({"user_id": user_id,
                            "fee": fee,
                            "time_payment": datetime.now()})
 
@@ -122,7 +126,7 @@ def get_barrier(park_id: int, state: str):
                                                                    "is_use_time_close": True,
                                                                    "user_id": "-1",
                                                                    "time_reserved": None}})
-        # add payment for user who reserved this park but not park 50
+        db["parking_user"].update_one({"user_id": park[0]["user_id"]}, {"$set": {"park_id": -1}})
         create_payment(park[0]["user_id"], PLEDGE)
     # =====
 
@@ -152,7 +156,8 @@ def update_barrier(park_id: int):
 
 
 # TODAY!!!
-# Frontend
+# Frontend 
+# gonna be token
 @router.post("/reserved/{park_id}/{user_id}", status_code=200)
 def reserved_park(park_id: int, user_id: int):
     if park_id not in range(0, 2):
@@ -174,7 +179,7 @@ def reserved_park(park_id: int, user_id: int):
     collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user_id,
                                                                "state": "reserved",
                                                                "is_open": False,
-                                                                "time_reserved": datetime.now() + timedelta(seconds=30)}})
+                                                                "time_reserved": datetime.now() + timedelta(seconds=5)}})
                                                                 
     collection_user.update_one({"_id": user_id}, {"$set": {"park_id": park_id}})
     

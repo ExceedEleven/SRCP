@@ -9,7 +9,6 @@ class User(BaseModel):
     password: str
     credits_card: str
     park_id: str
-    time_reserved: datetime
     
     
 class CarPark(BaseModel):
@@ -19,12 +18,12 @@ class CarPark(BaseModel):
     time_start: datetime
     time_close: datetime
     is_use_time_close: bool
-    user_id: str
+    user_id: str # object id
     time_reserved: datetime
     
 
 class Payment(BaseModel):
     # payment_id from database
-    user_id: str
+    user_id: str # object id
     fee: int
     time_payment: datetime
