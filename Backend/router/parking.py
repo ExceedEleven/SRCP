@@ -12,6 +12,8 @@ router = APIRouter(prefix="/park",
 
 
 def cost_calculate(start: datetime, cost):
+    if start is None:
+        return 0
     hours = ceil(abs(datetime.now() - start).total_seconds() / 3600)
     return hours * FEE
 
