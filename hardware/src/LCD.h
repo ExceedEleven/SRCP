@@ -6,13 +6,14 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 
-void ShowLcd(String isPark[2])
+void ShowLcd(String park_state[2])
 {
     
     int count = 0;
 
     for(int i =0; i< 2;i++){
-        if (isPark[i] == "empty"){
+        
+        if (park_state[i] == "empty"){
             count++;
         }
         

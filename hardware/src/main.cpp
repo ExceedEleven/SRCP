@@ -5,19 +5,19 @@
 #include <ESP32servo.h>
 #include "connect.h"
 #include "LCD.h"
-#define servo0 19
-#define servo1 18
+#define servo0 25
+#define servo1 26
 #define ldr0 32
 #define ldr1 33
 
-bool is_park[2] = {false};
+String is_park[2];
 String park_state[2];
-bool door_state[2] = {false}; //false is open
+bool door_state[2] = {false}; //false is close
 
 
 int ldr_reading0 = 4000, ldr_reading1 = 4000;
-Servo myservo0, myservo1;
-
+Servo myservo0;
+Servo myservo1;
 TaskHandle_t control_handle = NULL;
 TaskHandle_t door_handle = NULL;
 TaskHandle_t ldr_handle = NULL;
@@ -28,6 +28,7 @@ void lcd_control(void* param)
   while (1)
   {
     ShowLcd(park_state);
+    
   }
 }
 void ldr_control(void* param)
@@ -40,18 +41,18 @@ void ldr_control(void* param)
     // Serial.println(ldr_reading0);
     // Serial.print("ldr2 : ");
     // Serial.println(ldr_reading1);
-    if (ldr_reading0 < 2000)
-      is_park[0] = true;
+    if (ldr_reading0 < 3000)
+      is_park[0] = "parked";
     else 
-      is_park[0] = false;
+      is_park[0] = "empty";
     
     if (ldr_reading1 < 2000)
-      is_park[1] = true;
+      is_park[1] = "parked";
     else 
-      is_park[1] = false;
-    Serial.print(is_park[0]);
-    Serial.println(is_park[1]);
-    vTaskDelay(200/portTICK_PERIOD_MS);
+      is_park[1] = "empty";
+    // Serial.print(is_park[0]);
+    // Serial.println(is_park[1]);
+    vTaskDelay(100/portTICK_PERIOD_MS);
   }
 }
 void door_control(void* param)
@@ -60,23 +61,28 @@ void door_control(void* param)
   {
     if (door_state[0] == false)
     {
+      // Serial.println("----------------------------------------");
       myservo0.write(0);
 
     }
     else if (door_state[0] == true)
     {
-      myservo0.write(110);
+      // Serial.println("-------------------1---------------------");
+      myservo0.write(90);
     }
 
     if (door_state[1] == false)
     {
+      // Serial.println("----------------------------------------");
       myservo1.write(0);
     }
     else if (door_state[1] == true)
     {
-      myservo1.write(110);
+      myservo1.write(90);
+      // Serial.println("-------------------2---------------------");
     }
-    vTaskDelay(1000);
+    vTaskDelay(100/portTICK_PERIOD_MS);
+    
   }
 }
 void control(void* param)
@@ -85,14 +91,17 @@ void control(void* param)
     {
         DynamicJsonDocument doc0(2048);
         DynamicJsonDocument doc1(2048);
-        get_data(doc0, doc1);
-        park_state[0] = doc0["result"]["state"].as<String>();
-        park_state[1] = doc1["result"]["state"].as<String>();
-        door_state[0] = doc0["result"]["is_open"].as<bool>();
-        door_state[1] = doc1["result"]["is_open"].as<bool>();
-
+        DynamicJsonDocument doc2(2048);
+        DynamicJsonDocument doc3(2048);
+        get_data(park_state,door_state,is_park);
+        
+        
+        Serial.print("door0 state : ");
+        Serial.println(door_state[0]);
+        Serial.print("door1 state : ");
+        Serial.println(door_state[1]);
         // put_data();
-        vTaskDelay(1000/portTICK_PERIOD_MS);
+        vTaskDelay(100/portTICK_PERIOD_MS);
     }
 
 }
