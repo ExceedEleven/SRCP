@@ -11,7 +11,7 @@ load_dotenv(".env")
 PLEDGE = 50
 FEE = 10
 BASEUSERID = os.getenv("BASEUSERID")
-
+TIME_CLOSE = 10
 
 router = APIRouter(prefix="/park",
                    tags=["park"])
@@ -37,8 +37,8 @@ def create_payment(user_id: str, fee: int):
         user_id = BASEUSERID
     else:
         collection_payment.insert_one({"user_id": user_id,
-                           "fee": fee,
-                           "time_payment": datetime.now()})
+                                       "fee": fee,
+                                       "time_payment": datetime.now()})
 
 
 # Frontend
@@ -91,6 +91,7 @@ def get_park_id(park_id: int):
 # Hardware input output validate data in db
 @router.get("/barrier/{park_id}/{state}", status_code=200)
 def get_barrier(park_id: int, state: str):
+    time = None
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
 
@@ -102,6 +103,11 @@ def get_barrier(park_id: int, state: str):
 
     if len(park) == 0:
         raise HTTPException(status_code=404, detail="park not found")
+
+    if park[0]["state"] in ["empty", "reserved"] and state == "parked":
+        collection_park.update_one({"park_id": park_id}, {"$set": {"state": "parked",
+                                                                   "time_close": datetime.now() + timedelta(seconds=TIME_CLOSE).total_seconds(),
+                                                                   "is_use_time_close": False}})
 
     # =====
     if park[0]["is_use_time_close"] == False and park[0]["time_close"] < datetime.now():
@@ -146,12 +152,12 @@ def update_barrier(park_id: int):
         raise HTTPException(status_code=404, detail="park not found")
 
     collection_park.update_one({"park_id": park_id}, {"$set": {"is_open": True,
-                                                               "time_close": datetime.now() + timedelta(seconds=10),
+                                                               "time_close": datetime.now() + timedelta(seconds=TIME_CLOSE),
                                                                "is_use_time_close": False}})
     # Payment after open
     if park[0]["state"] == "parked":
         create_payment(park[0]["user_id"], cost_calculate(park[0]["time_start"]))
-    
+
     return {"result": "Success, barrier is open"}
 
 
@@ -161,34 +167,33 @@ def update_barrier(park_id: int):
 def reserved_park(park_id: int, token: str = Body()):
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
-    
+
     collection_park = db["car_park"]
     park = list(collection_park.find({"park_id": park_id}))
     if len(park) == 0:
         raise HTTPException(status_code=404, detail="park not found")
-    
+
     collection_user = db["parking_user"]
     user = list(collection_user.find({"jwt": token}))
     if len(user) == 0:
         raise HTTPException(status_code=404, detail="user not found")
-    
+
     if park[0]["state"] != "empty":
         raise HTTPException(status_code=404, detail="park is not empty")
-    
+
     collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user._id,
                                                                "state": "reserved",
                                                                "is_open": False,
-                                                                "time_reserved": datetime.now() + timedelta(seconds=5)}})
-                                                                
+                                                               "time_reserved": datetime.now() + timedelta(seconds=5)}})
+
     collection_user.update_one({"jwt": token}, {"$set": {"park_id": park_id}})
-    
+
     return {"result": "Success, park is reserved"}
-    
+
 
 # Frontend Optional
 @router.delete("/reserved/{park_id}", status_code=200)
 def delete_reserved_park(park_id: int, token: str = Body()):
-
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
 
@@ -211,16 +216,14 @@ def delete_reserved_park(park_id: int, token: str = Body()):
     if park[0]["user_id"] != user_token._id:
         raise HTTPException(status_code=404, detail="Error user permission")
 
-    create_payment(park[0]["user_id"], PLEDGE//2)
+    create_payment(park[0]["user_id"], PLEDGE // 2)
 
     collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
-                                                                   "is_open": True,
-                                                                   "time_start": None,
-                                                                   "is_use_time_close": True,
-                                                                   "user_id": "-1",
-                                                                   "time_reserved": None}})
+                                                               "is_open": True,
+                                                               "time_start": None,
+                                                               "is_use_time_close": True,
+                                                               "user_id": "-1",
+                                                               "time_reserved": None}})
     collection_user.update_one({"jwt": token}, {"$set": {"park_id": "-1"}})
 
     return {"result": "Delete reserved success"}
-
-
