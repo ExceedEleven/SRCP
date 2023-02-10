@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
-import { getDatabyid } from '../services/fetchdata';
+import { getDatabyid } from '../../services/fetchdata';
 
 function Status_style(status) {
   if (status == 'empty') {
