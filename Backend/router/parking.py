@@ -213,9 +213,12 @@ def delete_reserved_park(park_id: int, token: str = Body()):
 
     create_payment(park[0]["user_id"], PLEDGE//2)
 
-    collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": "-1",
-                                                               "state": "empty",
-                                                               "time_reserved": None}})
+    collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
+                                                                   "is_open": True,
+                                                                   "time_start": None,
+                                                                   "is_use_time_close": True,
+                                                                   "user_id": "-1",
+                                                                   "time_reserved": None}})
     collection_user.update_one({"jwt": token}, {"$set": {"park_id": "-1"}})
 
     return {"result": "Delete reserved success"}
