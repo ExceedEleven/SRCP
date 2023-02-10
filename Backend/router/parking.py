@@ -11,11 +11,19 @@ router = APIRouter(prefix="/park",
                    tags=["park"])
 
 
-def cost_calculate(start: datetime):
+def cost_calculate(start):
     if start is None:
         return 0
     hours = ceil(abs(datetime.now() - start).total_seconds() / 3600)
     return hours * FEE
+
+
+def convert_time(time: datetime):
+    hour = int(time.total_seconds() // 3600)
+    min = int(time.total_seconds() % 3600 // 60)
+    sec = int(time.total_seconds() % 60 // 1)
+    return f"{hour}:{min}:{sec}"
+
 
 
 # Frontend
@@ -31,7 +39,7 @@ def get_park():
 
     for park in data:
         if park["time_reserved"] is not None:
-            remain_time_reserved.append(park["time_reserved"] - datetime.now())
+            remain_time_reserved.append(convert_time(park["time_reserved"] - datetime.now()))
         else:
             remain_time_reserved.append(None)
 
@@ -55,11 +63,11 @@ def get_park_id(park_id: int):
 
     reserved_time = None
     if result["time_reserved"] is not None:
-        reserved_time = result["time_reserved"] - datetime.now()
+        reserved_time = convert_time(result["time_reserved"] - datetime.now())
 
     parked_time = None
     if result["time_start"] is not None:
-        parked_time = datetime.now() - result["time_start"]
+        parked_time = convert_time(datetime.now() - result["time_start"])
 
     return {"result": result,
             "fee": cost_calculate(result["time_start"]),
