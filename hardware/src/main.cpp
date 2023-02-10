@@ -6,6 +6,7 @@
 #include <ESP32servo.h>
 
 #define servo0 19
+#define servo1 18
 #define ldr0 32
 #define ldr1 33
 bool is_park[2] = {false};
@@ -44,6 +45,7 @@ void door_control(void* param)
     if (door_state[0] == false)
     {
       myservo0.write(0);
+
     }
     else if (door_state[0] == true)
     {
@@ -78,6 +80,7 @@ void control(void* param)
 void setup() {
   Serial.begin(115200);
   myservo0.attach(servo0);
+  myservo1.attach(servo1);
   connectWifi();
   xTaskCreatePinnedToCore(control, "main_control",10000,NULL,1,&control_handle,1);
   xTaskCreatePinnedToCore(ldr_control, "ldr_control",2000, NULL, 1,&ldr_handle,0);
