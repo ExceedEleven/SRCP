@@ -18,6 +18,12 @@ def cost_calculate(start: datetime):
     return hours * FEE
 
 
+def create_payment(user_id: str, fee: int):
+    collection_payment = db["payment"]
+    collection_payment.insert_one({"user_id": user_id,
+                           "fee": fee,
+                           "time_payment": datetime.now()})
+
 # Frontend
 @router.get("/", status_code=200)
 def get_park():
@@ -91,6 +97,7 @@ def get_barrier(park_id: int, state: str):
                                                                    "user_id": "-1",
                                                                    "time_reserved": None}})
         # add payment for user who reserved this park but not park 50
+        create_payment(park[0]["user_id"], PLEDGE)
     # =====
 
     return {"result": park[0]["is_open"]}
@@ -112,7 +119,8 @@ def update_barrier(park_id: int):
                                                                "time_close": datetime.now() + timedelta(seconds=10),
                                                                "is_use_time_close": False}})
     # Payment after open
-
+    create_payment(park[0]["user_id"], cost_calculate(park[0]["time_start"]))
+    
     return {"result": "Success, barrier is open"}
 
 
