@@ -93,7 +93,6 @@ def get_barrier(park_id: int, state: str):
 # Frontend call for open barrier and get fee
 @router.put("/barrier/{park_id}", status_code=200)
 def update_barrier(park_id: int):
-    fee = 0
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
 
@@ -106,11 +105,9 @@ def update_barrier(park_id: int):
     collection_park.update_one({"park_id": park_id}, {"$set": {"is_open": True,
                                                              "time_close": datetime.now() + timedelta(seconds=10),
                                                              "is_use_time_close": False}})
-    if park[0]["state"] == "parked":
-        fee = cost_calculate(park[0]["time_start"], FEE)
+    #Payment after open
 
-    return {"result": "Success, barrier is open",
-            "fee": fee}
+    return {"result": "Success, barrier is open"}
 
 
 # TODAY!!!
