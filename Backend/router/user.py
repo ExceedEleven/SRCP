@@ -30,16 +30,16 @@ def get_user(token: str = Body()):
     return {"result": {
         "park_id": user[0]["park_id"],
     }}
-    
-# optional # split password and credit card
-@router.put("/update", status_code=200)
-def update_user(token: str = Body(), credit_card: str = Body()):
-    return
-    user = list(COLLECTION_USER.find({"jwt": token}))
-    if len(user) == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-    pass
-    
+
+# # optional # split password and credit card
+# @router.put("/update", status_code=200)
+# def update_user(token: str = Body(), credit_card: str = Body()):
+#     return
+#     user = list(COLLECTION_USER.find({"jwt": token}))
+#     if len(user) == 0:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     pass
+#
     
 @router.post("/signin", status_code=200)
 def signin(username: str = Body(), password: str = Body()):
