@@ -16,7 +16,6 @@ function App() {
   return (
     <main>
       <HeadBar isLogin={isLogin} setLogin={setLogin} />
-
       <PopupConfirm
         park_id={parkId}
         popEnter={popEnter}
@@ -26,10 +25,9 @@ function App() {
         popReserve={popReserve}
         setPopReserve={setPopReserve}
       />
-
       <SignupPopup />
       <LoginPopup />
-      <AppButton />
+      <AppButton /> {/** Test reserve button */}
     </main>
   );
 }

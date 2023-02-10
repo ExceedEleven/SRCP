@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Card, CardContent } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { getDatabyid } from '../../services/fetchdata';
 
 function Status_style(status) {
@@ -40,7 +39,7 @@ function Status({ status, login }) {
   }
 }
 
-export const ParkingCard = ({ park_id, login }) => {
+export const AppCard = ({ park_id, login }) => {
   const [state, setState] = useState('empty');
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -62,4 +61,4 @@ export const ParkingCard = ({ park_id, login }) => {
     </div>
   );
 };
-export default ParkingCard;
+export default AppCard;
