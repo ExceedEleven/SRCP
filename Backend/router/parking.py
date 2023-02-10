@@ -155,7 +155,6 @@ def update_barrier(park_id: int):
     return {"result": "Success, barrier is open"}
 
 
-# TODAY!!!
 # Frontend 
 # gonna be token
 @router.post("/reserved/{park_id}/", status_code=200)
@@ -188,5 +187,40 @@ def reserved_park(park_id: int, token: str = Body()):
 
 # Frontend Optional
 @router.delete("/reserved/{park_id}", status_code=200)
-def delete_reserved_park(park_id: int):
-    pass
+def delete_reserved_park(park_id: int, token: str = Body()):
+
+    if park_id not in range(0, 2):
+        raise HTTPException(status_code=404, detail="park_id must in range 0-1")
+
+    collection_park = db["car_park"]
+    park = list(collection_park.find({"park_id": park_id}))
+    if len(park) == 0:
+        raise HTTPException(status_code=404, detail="park not found")
+
+    if park[0]["status"] != "reserved":
+        raise HTTPException(status_code=404, detail="This park didn't reserved")
+
+    if park[0]["user_id"] == "-1":
+        raise HTTPException(status_code=404, detail="No reservation")
+
+    collection_user = db["parking_user"]
+    user_token = list(collection_user.find({"jwt": token}))
+    if len(user_token) == 0:
+        raise HTTPException(status_code=404, detail="user not found")
+
+    if park[0]["user_id"] != user_token._id:
+        raise HTTPException(status_code=404, detail="Error user permission")
+
+    create_payment(park[0]["user_id"], PLEDGE//2)
+
+    collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
+                                                                   "is_open": True,
+                                                                   "time_start": None,
+                                                                   "is_use_time_close": True,
+                                                                   "user_id": "-1",
+                                                                   "time_reserved": None}})
+    collection_user.update_one({"jwt": token}, {"$set": {"park_id": "-1"}})
+
+    return {"result": "Delete reserved success"}
+
+
