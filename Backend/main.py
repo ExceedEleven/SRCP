@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from router import parking
+from router import parking, user
 from config.database import db
 
 origins = ['*']
@@ -16,6 +16,7 @@ app.add_middleware(
 )
 
 app.include_router(parking.router)
+app.include_router(user.router)
 
 @app.get("/")
 def root():
