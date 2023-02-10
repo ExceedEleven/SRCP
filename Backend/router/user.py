@@ -22,7 +22,7 @@ router = APIRouter(prefix="/user",
                    tags=["user"])
 
 
-@router.get("/", status_code=200)
+@router.get("", status_code=200)
 def get_user(token: str = Body(embed=True)):
     user = list(COLLECTION_USER.find({"jwt": token}))
     if len(user) == 0:

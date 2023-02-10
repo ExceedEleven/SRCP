@@ -42,7 +42,7 @@ def create_payment(user_id: str, fee: int):
 
 
 # Frontend
-@router.get("/", status_code=200)
+@router.get("", status_code=200)
 def get_park():
     collection = db["car_park"]
     data = list(collection.find({}, {"_id": False}))
