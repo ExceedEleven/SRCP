@@ -53,7 +53,7 @@ def signin(username: str = Body(), password: str = Body()):
 
 
 @router.post("/signup", status_code=200)
-def signup(username: str = Body(), password: str = Body(), credit_card: str = Body()):
+def signup(username: str = Body(), password: str = Body(), credits_card: str = Body()):
     if username == password:
         raise HTTPException(status_code=404, detail="Username and password must be different")
     
@@ -68,7 +68,7 @@ def signup(username: str = Body(), password: str = Body(), credit_card: str = Bo
     COLLECTION_USER.insert_one({"jwt": token,
                                 "username": username,
                                 "password": password_hash,
-                                "credit_card": credit_card,
+                                "credit_card": credits_card,
                                 "park_id": "-1"})
     
     return {"result": {
