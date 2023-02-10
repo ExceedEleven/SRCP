@@ -55,6 +55,8 @@ def get_park():
             park["remain_time_reserved"] = park["time_reserved"] - datetime.now()
         else:
             park["remain_time_reserved"] = None
+        park["user_id"] = str(park["user_id"])
+
 
     return {"result": data}
 
@@ -84,6 +86,8 @@ def get_park_id(park_id: int):
     result["remain_time_reserved"] = reserved_time
     result["parked_time"] = parked_time
     result["fee"] = cost_calculate(result["time_start"])
+
+    result["user_id"] = str(result["user_id"])
 
     return {"result": result}
 
