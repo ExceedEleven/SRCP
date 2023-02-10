@@ -27,7 +27,16 @@ def get_park():
     if len(data) == 0:
         raise HTTPException(status_code=404, detail="Park not found")
 
-    return {"result": data}
+    remain_time_reserved = []
+
+    for park in data:
+        if park["time_reserved"] is not None:
+            remain_time_reserved.append(park["time_reserved"] - datetime.now())
+        else:
+            remain_time_reserved.append(None)
+
+    return {"result": data,
+            "remain_time_reserved": remain_time_reserved}
 
 
 # Frontend QR or park detail
@@ -43,8 +52,19 @@ def get_park_id(park_id: int):
         raise HTTPException(status_code=404, detail="Park not found")
 
     result = data[0]
+
+    reserved_time = None
+    if result["time_reserved"] is not None:
+        reserved_time = result["time_reserved"] - datetime.now()
+
+    parked_time = None
+    if result["time_start"] is not None:
+        parked_time = datetime.now() - result["time_start"]
+
     return {"result": result,
-            "fee": cost_calculate(result["time_start"])}
+            "fee": cost_calculate(result["time_start"]),
+            "remain_time_reserved": reserved_time,
+            "parked_time": parked_time}
 
 
 # # Hardware
