@@ -88,11 +88,6 @@ def get_park_id(park_id: int):
     return {"result": result}
 
 
-# # Hardware
-# @router.put("/update/{park_id}", status_code=200)
-# def update_park(park_id: int):
-
-
 # Hardware input output validate data in db
 @router.get("/barrier/{park_id}/{state}", status_code=200)
 def get_barrier(park_id: int, state: str):
@@ -131,7 +126,7 @@ def get_barrier(park_id: int, state: str):
                                                                    "is_use_time_close": True,
                                                                    "user_id": "-1",
                                                                    "time_reserved": None}})
-        db["parking_user"].update_one({"user_id": park[0]["user_id"]}, {"$set": {"park_id": -1}})
+        db["parking_user"].update_one({"_id": park[0]["user_id"]}, {"$set": {"park_id": -1}})
         create_payment(park[0]["user_id"], PLEDGE)
     # =====
 
@@ -163,8 +158,8 @@ def update_barrier(park_id: int):
 # TODAY!!!
 # Frontend 
 # gonna be token
-@router.post("/reserved/{park_id}/{user_id}", status_code=200)
-def reserved_park(park_id: int, user_id: int):
+@router.post("/reserved/{park_id}/", status_code=200)
+def reserved_park(park_id: int, token: str = Body()):
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
     
@@ -174,19 +169,19 @@ def reserved_park(park_id: int, user_id: int):
         raise HTTPException(status_code=404, detail="park not found")
     
     collection_user = db["parking_user"]
-    user = list(collection_user.find({"_id": user_id}))
+    user = list(collection_user.find({"jwt": token}))
     if len(user) == 0:
         raise HTTPException(status_code=404, detail="user not found")
     
     if park[0]["state"] != "empty":
         raise HTTPException(status_code=404, detail="park is not empty")
     
-    collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user_id,
+    collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user._id,
                                                                "state": "reserved",
                                                                "is_open": False,
                                                                 "time_reserved": datetime.now() + timedelta(seconds=5)}})
                                                                 
-    collection_user.update_one({"_id": user_id}, {"$set": {"park_id": park_id}})
+    collection_user.update_one({"jwt": token}, {"$set": {"park_id": park_id}})
     
     return {"result": "Success, park is reserved"}
     
