@@ -203,7 +203,7 @@ def reserved_park(park_id: int, token: str = Body(embed=True)):
 
 
 # Frontend Optional
-@router.delete("/reserved/{park_id}", status_code=200)
+@router.post("/reserved/delete/{park_id}", status_code=200)
 def delete_reserved_park(park_id: int, token: str = Body()):
     if park_id not in range(0, 2):
         raise HTTPException(status_code=404, detail="park_id must in range 0-1")
