@@ -129,6 +129,10 @@ def get_barrier(park_id: int, state: str):
                                                                        "is_use_time_close": True,
                                                                        "user_id": "-1",
                                                                        "time_reserved": None}})
+        elif state == "reserved":
+            collection_park.update_one({"park_id": park_id}, {"$set": {"is_open": False,
+                                                                       "is_use_time_close": True}})
+
 
     if park[0]["state"] == "reserved" and park[0]["time_reserved"] < datetime.now():
         collection_park.update_one({"park_id": park_id}, {"$set": {"state": "empty",
