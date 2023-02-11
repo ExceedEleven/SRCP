@@ -140,7 +140,7 @@ def get_barrier(park_id: int, state: str):
         create_payment(park[0]["user_id"], PLEDGE)
     # =====
 
-    return {"result": park[0]["is_open"]}
+    return {"result": [park[0]["is_open"], park[0]["state"]]}
 
 
 # Frontend call for open barrier and get fee
