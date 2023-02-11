@@ -14,7 +14,6 @@ String is_park[2];
 String park_state[2];
 bool door_state[2] = {false}; //false is close
 
-
 int ldr_reading0 = 4000, ldr_reading1 = 4000;
 Servo myservo0;
 Servo myservo1;
@@ -28,7 +27,6 @@ void lcd_control(void* param)
   while (1)
   {
     ShowLcd(park_state);
-    
   }
 }
 void ldr_control(void* param)
@@ -37,19 +35,52 @@ void ldr_control(void* param)
   {
     ldr_reading0 = analogRead(ldr0);
     ldr_reading1 = analogRead(ldr1);
-    // Serial.print("ldr1 : ");
-    // Serial.println(ldr_reading0);
-    // Serial.print("ldr2 : ");
-    // Serial.println(ldr_reading1);
-    if (ldr_reading0 < 3000)
-      is_park[0] = "parked";
-    else 
-      is_park[0] = "empty";
-    
-    if (ldr_reading1 < 2000)
-      is_park[1] = "parked";
-    else 
-      is_park[1] = "empty";
+    Serial.print("ldr0 : ");
+    Serial.println(ldr_reading0);
+    Serial.print("ldr1 : ");
+    Serial.println(ldr_reading1);
+    if (door_state[0]) //door close
+    {
+      if (ldr_reading0 < 3000)
+        is_park[0] = "parked";
+      else 
+      {
+        if (park_state[0] == "reserved")is_park[0] = "reserved";
+        else is_park[0] = "empty";
+      }
+    }
+    else //door open
+    {
+      if (ldr_reading0 < 3000)
+        is_park[0] = "parked";
+      else 
+      {
+        if (park_state[0] == "reserved")is_park[0] = "reserved";
+        else is_park[0] = "empty";
+      }
+    }  
+    //door1
+    if (door_state[1])
+    {
+      if (ldr_reading1 < 2300)
+        is_park[1] = "parked";
+      else 
+      {
+        if (park_state[1] == "reserved")is_park[1] = "reserved";
+        else is_park[1] = "empty";
+      }
+    }
+    else //door open
+    {
+      if (ldr_reading1 < 2300)
+        is_park[1] = "parked";
+      else 
+      {
+        if (park_state[1] == "reserved")is_park[1] = "reserved";
+        else is_park[1] = "empty";
+      }
+    }  
+
     // Serial.print(is_park[0]);
     // Serial.println(is_park[1]);
     vTaskDelay(100/portTICK_PERIOD_MS);
@@ -89,10 +120,6 @@ void control(void* param)
 {
     while(1)
     {
-        DynamicJsonDocument doc0(2048);
-        DynamicJsonDocument doc1(2048);
-        DynamicJsonDocument doc2(2048);
-        DynamicJsonDocument doc3(2048);
         get_data(park_state,door_state,is_park);
         
         
