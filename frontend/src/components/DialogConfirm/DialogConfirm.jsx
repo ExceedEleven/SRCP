@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 
-const DialogConfirm = ({ parkId, handleFunc, message, open, setOpen }) => {
+const DialogConfirm = ({ parkId, handleFunc, headMessage, message, open, setOpen }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -16,7 +16,7 @@ const DialogConfirm = ({ parkId, handleFunc, message, open, setOpen }) => {
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description">
-      <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{headMessage}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">{message}</DialogContentText>
       </DialogContent>

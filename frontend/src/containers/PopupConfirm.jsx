@@ -7,6 +7,7 @@ const PopupConfirm = ({
   popEnter,
   setPopEnter,
   popExit,
+  popExitMessage,
   setPopExit,
   popReserve,
   setPopReserve
@@ -25,21 +26,24 @@ const PopupConfirm = ({
       <DialogConfirm
         parkId={parkId}
         handleFunc={handleOpenGate}
-        message="Are you sure to enter?"
+        headMessage="Are you sure to enter?"
+        message=""
         open={popEnter}
         setOpen={setPopEnter}
       />
       <DialogConfirm
         parkId={parkId}
         handleFunc={handleExitGate}
-        message="Are you sure to exit?"
+        headMessage="Are you sure to exit?"
+        message={popExitMessage}
         open={popExit}
         setOpen={setPopExit}
       />
       <DialogConfirm
         parkId={parkId}
         handleFunc={handleReserve}
-        message="Are you sure to reserve this park?"
+        headMessage="Are you sure to reserve this park?"
+        message="You only have 30 minutes to be at parking area or else the reservation would be cancelled"
         open={popReserve}
         setOpen={setPopReserve}
       />

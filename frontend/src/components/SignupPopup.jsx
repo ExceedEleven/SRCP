@@ -1,18 +1,14 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 import { SendRegister } from '../services/postdata';
 
-const SignupPopup = () => {
-  const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+const SignupPopup = ({ setOpen, open }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -29,7 +25,7 @@ const SignupPopup = () => {
       cvv.value !== '' &&
       expire.value !== ''
     ) {
-      // SendRegister(username.value,password.value,credit_num.value)
+      SendRegister(username.value, password.value, credit_num.value);
       setOpen(false);
     } else {
       username.value = '';
@@ -41,9 +37,6 @@ const SignupPopup = () => {
   };
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Signup
-      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Signup</DialogTitle>
         <DialogContent>

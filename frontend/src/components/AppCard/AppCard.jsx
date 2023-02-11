@@ -1,92 +1,18 @@
 import { Card, CardContent } from '@mui/material';
-import React from 'react';
-import AppButton from '../AppButton/AppButton';
-import PopupConfirm from '../../containers/PopupConfirm';
+import React, { useEffect, useState } from 'react';
+import { getUserReseveId } from '../../services/auth';
+import Status from './Status';
 
-function Status_style(status) {
-  if (status == 'empty') {
-    return 'grey';
-  } else {
-    if (status != 'reserved') {
-      return 'red';
-    } else {
-      return 'yellow';
-    }
-  }
-}
-
-function Available(login, setPopReserve) {
-  if (!login) {
-    return <h1>Available</h1>;
-  } else {
-    return (
-      <div>
-        <h1>Available</h1>
-        <AppButton
-          btnText="Reserved"
-          onClick={() => {
-            setPopReserve(true);
-          }}
-        />
-      </div>
-    );
-  }
-}
-
-function Reserved(login, all, setPopEnter, setPopExit) {
-  if (!login) {
-    return <h1>Reserved</h1>;
-  } else {
-    if (all.user_id == true && all.time_start != NULL) {
-      return (
-        <div>
-          <p>Reserved Time: {all.time_reserved}</p>
-          <p>Fee: {all.fee}</p>
-          <AppButton
-            btnText="Exit"
-            onClick={() => {
-              setPopExit(true);
-            }}
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <p>Reserved Time: {all.time_reserved}</p>
-          <p>Fee: {all.fee}</p>
-          <AppButton
-            btnText="Enter"
-            onClick={() => {
-              setPopEnter(true);
-            }}
-          />
-        </div>
-      );
-    }
-  }
-}
-
-function Status({
-  all,
-  login,
-  popEnter,
-  popExit,
-  popReserve,
-  setPopEnter,
-  setPopExit,
-  setPopReserve,
-  setParkId
-}) {
-  console.log(all);
-  if (all.state == 'empty') {
-    return Available(login, setPopReserve);
-  } else {
-    if (all.state != 'reserved') {
-      return <h1>Unavailble</h1>;
-    } else {
-      Reserved(login, all, setPopEnter, setPopExit);
-    }
+function Status_style(park, login, data) {
+  if (park.state == 'empty') {
+    return '#6B728E';
+  } else if (
+    park.state == 'reserved' ||
+    (login && park.state == 'parked' && data.park_id == park.park_id)
+  ) {
+    return '#F2CD5C';
+  } else if (park.state == 'parked') {
+    return '#F55050';
   }
 }
 
@@ -98,22 +24,46 @@ export const AppCard = ({
   popReserve,
   setPopEnter,
   setPopExit,
+  setPopExitMessage,
   setPopReserve,
   setParkId
 }) => {
-  console.log(park);
+  const [data, setData] = useState({});
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const data = await getUserReseveId();
+
+        setData(data.data.result);
+      } catch (err) {
+        console.log(err);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div>
       <h2>Parking {park.park_id + 1}</h2>
-      <Card sx={{ height: 400, width: 500 }} style={{ backgroundColor: Status_style(park.state) }}>
+
+      <Card
+        sx={{ height: 400, width: 500 }}
+        style={{
+          backgroundColor: Status_style(park, login, data),
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
         <CardContent>
           <Status
-            all={park}
+            park={park}
             login={login}
+            data={data}
             popEnter={popEnter}
             setPopEnter={setPopEnter}
             popExit={popExit}
             setPopExit={setPopExit}
+            setPopExitMessage={setPopExitMessage}
             popReserve={popReserve}
             setPopReserve={setPopReserve}
             setParkId={setParkId}

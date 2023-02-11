@@ -1,15 +1,14 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 import { SendLogin } from '../services/postdata';
 
-const LoginPopup = () => {
-  const [open, setOpen] = React.useState(false);
+const LoginPopup = ({ setOpen, open, setLogin, setUserName }) => {
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -20,18 +19,18 @@ const LoginPopup = () => {
     console.log(username.value);
     console.log(password.value);
     if (username.value !== '' && password.value !== '') {
-      // SendLogin(username.value,password.value)
+      SendLogin(username.value, password.value);
+      setUserName(username.value);
       setOpen(false);
     } else {
       username.value = '';
       password.value = '';
     }
+    setLogin(true);
   };
+
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Login
-      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Login</DialogTitle>
         <DialogContent>

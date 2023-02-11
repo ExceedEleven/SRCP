@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import AppCard from '../components/AppCard/AppCard';
 import { getData } from '../services/fetchdata';
-import Button from '@mui/material/Button';
 const GridCard = ({
   login,
   popEnter,
-  popExit,
-  popReserve,
   setPopEnter,
+  popExit,
   setPopExit,
+  setPopExitMessage,
+  popReserve,
   setPopReserve,
+  parkId,
   setParkId
 }) => {
   const [parks, setParks] = useState([]);
@@ -26,21 +27,17 @@ const GridCard = ({
   }, []);
 
   return (
-    <div>
-      {/* <Button
-        onClick={() => {
-          setPopReserve(true);
-        }}>
-        asdsd
-      </Button> */}
+    <div className="GridCard" style={{ display: 'flex', gap: '4rem', justifyContent: 'center' }}>
       {parks.map((park) => (
         <AppCard
+          key={park.park_id}
           park={park}
           login={login}
           popEnter={popEnter}
           setPopEnter={setPopEnter}
           popExit={popExit}
           setPopExit={setPopExit}
+          setPopExitMessage={setPopExitMessage}
           popReserve={popReserve}
           setPopReserve={setPopReserve}
           setParkId={setParkId}

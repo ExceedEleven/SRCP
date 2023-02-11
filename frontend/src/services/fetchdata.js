@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export async function getData() {
   const res = await axios.get('http://group11.exceed19.online/park');
-  console.log(res.data);
+  //console.log(res.data);
   return res.data;
 }
 export async function getDatabyid(id) {

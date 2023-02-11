@@ -5,14 +5,22 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 
-const HeadBar = ({ isLogin, setLogin, setPopLogin, setPopSignUp }) => {
+const HeadBar = ({ isLogin, setLogin, setPopLogin, setPopSignUp, userName }) => {
   const handleLogin = () => {
     setPopLogin(true);
   };
   const handleSignUp = () => {
-    alert('Sign Up');
     setPopSignUp(true);
   };
+
+  // useEffect(() => {
+  //   const token = document.cookie.split('=')[1];
+  //   if (token) {
+  //     setLogin(true);
+  //   }
+  //   setParkId(data.data.result.park_id);
+  // }, []);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky">
@@ -21,14 +29,28 @@ const HeadBar = ({ isLogin, setLogin, setPopLogin, setPopSignUp }) => {
             Profile
           </Typography>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {isLogin ? `Welcome` : 'Welcome to the App'}
+            {isLogin ? `Welcome ${userName}` : 'Welcome to the App'}
           </Typography>
-          <Button color="inherit" onClick={handleSignUp}>
-            Sign-Up
-          </Button>
-          <Button color="inherit" onClick={handleLogin}>
-            Sign-In
-          </Button>
+          {!isLogin && (
+            <Button color="inherit" onClick={handleSignUp}>
+              Sign-Up
+            </Button>
+          )}
+          {!isLogin && (
+            <Button color="inherit" onClick={handleLogin}>
+              Sign-In
+            </Button>
+          )}
+          {isLogin && (
+            <Button
+              color="inherit"
+              onClick={() => {
+                setLogin(false);
+                document.cookie = 'token=; path=/;';
+              }}>
+              Sign-Out
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
