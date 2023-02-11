@@ -12,6 +12,7 @@ PLEDGE = 50
 FEE = 10
 BASEUSERID = os.getenv("BASEUSERID")
 TIME_CLOSE = 10
+RESERVED_TIME = timedelta(minutes=1)
 
 router = APIRouter(prefix="/park",
                    tags=["park"])
@@ -188,7 +189,7 @@ def reserved_park(park_id: int, token: str = Body(embed=True)):
     collection_park.update_one({"park_id": park_id}, {"$set": {"user_id": user[0]["_id"],
                                                                "state": "reserved",
                                                                "is_open": False,
-                                                               "time_reserved": datetime.now() + timedelta(seconds=5)}})
+                                                               "time_reserved": datetime.now() + RESERVED_TIME}})
 
     collection_user.update_one({"jwt": token}, {"$set": {"park_id": park_id}})
 
