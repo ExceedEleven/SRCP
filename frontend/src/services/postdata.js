@@ -16,7 +16,7 @@ export async function SetReserve(pid) {
 }
 export async function Delete(pid) {
   const token = await getToken();
-  const res = await axios.post(`http://group11.exceed19.online/park/reserved/${pid}`, {
+  const res = await axios.post(`http://group11.exceed19.online/park/reserved/delete/${pid}`, {
     token: token
   });
   // console.log(res);

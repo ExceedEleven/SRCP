@@ -1,6 +1,6 @@
 import React from 'react';
 import DialogConfirm from '../components/DialogConfirm/DialogConfirm';
-import { SetBarrier, SetReserve } from '../services/postdata';
+import { Delete, SetBarrier, SetReserve } from '../services/postdata';
 
 const PopupConfirm = ({
   parkId,
@@ -10,7 +10,9 @@ const PopupConfirm = ({
   popExitMessage,
   setPopExit,
   popReserve,
-  setPopReserve
+  setPopReserve,
+  popCancel,
+  setPopCancel
 }) => {
   const handleOpenGate = () => {
     SetBarrier(parkId);
@@ -21,6 +23,10 @@ const PopupConfirm = ({
   const handleReserve = () => {
     SetReserve(parkId);
   };
+  const handleCancel = () => {
+    Delete(parkId);
+  };
+
   return (
     <div>
       <DialogConfirm
@@ -46,6 +52,14 @@ const PopupConfirm = ({
         message="You only have 30 minutes to be at parking area or else the reservation would be cancelled"
         open={popReserve}
         setOpen={setPopReserve}
+      />
+      <DialogConfirm
+        parkId={parkId}
+        handleFunc={handleCancel}
+        headMessage="Are you sure to cancel?"
+        message="Fee: 25 Baht"
+        open={popCancel}
+        setOpen={setPopCancel}
       />
     </div>
   );

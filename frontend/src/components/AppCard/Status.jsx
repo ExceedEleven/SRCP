@@ -12,7 +12,8 @@ function Status({
   setPopExit,
   setPopExitMessage,
   setPopReserve,
-  setParkId
+  setParkId,
+  setPopCancel
 }) {
   if (park.state == 'empty') {
     return (
@@ -38,6 +39,7 @@ function Status({
             setPopExit={setPopExit}
             setParkId={setParkId}
             setPopExitMessage={setPopExitMessage}
+            setPopCancel={setPopCancel}
           />
         </div>
       );

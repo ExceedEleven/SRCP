@@ -11,7 +11,8 @@ const GridCard = ({
   popReserve,
   setPopReserve,
   parkId,
-  setParkId
+  setParkId,
+  setPopCancel
 }) => {
   const [parks, setParks] = useState([]);
   useEffect(() => {
@@ -41,6 +42,7 @@ const GridCard = ({
           popReserve={popReserve}
           setPopReserve={setPopReserve}
           setParkId={setParkId}
+          setPopCancel={setPopCancel}
         />
       ))}
     </div>

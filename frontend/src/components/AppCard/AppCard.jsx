@@ -26,7 +26,8 @@ export const AppCard = ({
   setPopExit,
   setPopExitMessage,
   setPopReserve,
-  setParkId
+  setParkId,
+  setPopCancel
 }) => {
   const [data, setData] = useState({});
   useEffect(() => {
@@ -67,6 +68,7 @@ export const AppCard = ({
             popReserve={popReserve}
             setPopReserve={setPopReserve}
             setParkId={setParkId}
+            setPopCancel={setPopCancel}
           />
         </CardContent>
       </Card>

@@ -1,8 +1,18 @@
+import Button from '@mui/material/Button';
 import React, { useEffect, useState } from 'react';
 import { getDatabyid } from '../../services/fetchdata';
 import AppButton from '../AppButton/AppButton';
 
-function Reserved({ login, park, data, setPopEnter, setPopExit, setPopExitMessage, setParkId }) {
+function Reserved({
+  login,
+  park,
+  data,
+  setPopEnter,
+  setPopExit,
+  setPopExitMessage,
+  setParkId,
+  setPopCancel
+}) {
   const [parkData, setParkData] = useState({});
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -42,6 +52,20 @@ function Reserved({ login, park, data, setPopEnter, setPopExit, setPopExitMessag
             Remain time reserved:{' '}
             {parseInt(park.remain_time_reserved) < 0 ? 0 : parseInt(park.remain_time_reserved)}
           </h2>
+          <div
+            className="appbutton"
+            style={{ marginTop: '3rem', display: 'flex', justifyContent: 'center' }}>
+            <Button
+              style={{ fontSize: '20px' }}
+              variant="contained"
+              color="error"
+              onClick={() => {
+                setPopCancel(true);
+                setParkId(park.park_id);
+              }}>
+              {'Cancel'}
+            </Button>
+          </div>
           <AppButton
             btnText="Enter"
             onClick={() => {

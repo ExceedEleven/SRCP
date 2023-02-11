@@ -6,6 +6,7 @@ import HeadBar from '../containers/HeadBar';
 import PopupConfirm from '../containers/PopupConfirm';
 
 function Main() {
+  const [popCancel, setPopCancel] = useState(false);
   const [popEnter, setPopEnter] = useState(false);
   const [popExit, setPopExit] = useState(false);
   const [popExitMessage, setPopExitMessage] = useState('');
@@ -33,6 +34,8 @@ function Main() {
         setPopExit={setPopExit}
         popReserve={popReserve}
         setPopReserve={setPopReserve}
+        popCancel={popCancel}
+        setPopCancel={setPopCancel}
       />
       <GridCard
         login={isLogin}
@@ -45,6 +48,7 @@ function Main() {
         setPopReserve={setPopReserve}
         parkId={parkId}
         setParkId={setParkId}
+        setPopCancel={setPopCancel}
       />
       <SignupPopup setOpen={setPopSignUp} open={popSignUp} />
       <LoginPopup
