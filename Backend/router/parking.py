@@ -29,7 +29,7 @@ def convert_time(time: datetime):
     hour = int(time.total_seconds() // 3600)
     min = int(time.total_seconds() % 3600 // 60)
     sec = int(time.total_seconds() % 60 // 1)
-    return f"{hour}:{min}:{sec}"
+    return f"{hour:02d}:{min:02d}:{sec:02d}"
 
 
 def create_payment(user_id: str, fee: int):
