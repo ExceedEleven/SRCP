@@ -48,7 +48,8 @@ def signin(username: str = Body(), password: str = Body()):
     if len(user) == 0 or not pwd_context.verify(password, user[0]["password"]):
         raise HTTPException(status_code=404, detail="Username or password is incorrect")
     
-    content = {"result": "success"}
+    content = {"result": "success",
+               "jwt": user[0]["jwt"]}
     
     response = JSONResponse(content=content)
     response.set_cookie(key="jwt", value=user[0]["jwt"])
